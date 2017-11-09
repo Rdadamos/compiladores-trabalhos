@@ -1,6 +1,7 @@
 # 02-brainf_ck
 
 ## Autor
+Halê Valente Silva - 13/0010014
 Rodrigo Dadamos Lopes da Silva - 15/0064535
 
 ## Descrição
