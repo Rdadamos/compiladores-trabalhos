@@ -1,7 +1,8 @@
 # 02-brainf_ck
 
 ## Autor
-Rodrigo Dadamos Lopes da Silva - 15/0064535
+- Halê Valente Silva - 13/0010014
+- Rodrigo Dadamos Lopes da Silva - 15/0064535
 
 ## Descrição
 Compilador de Brainf_ck para Shell Script (bash) para a matéria Fundamentos de Compiladores do curso de Engenharia de Software da UnB-FGA.
