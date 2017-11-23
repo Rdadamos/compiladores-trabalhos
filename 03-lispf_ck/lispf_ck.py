@@ -1,25 +1,37 @@
 import ox
+import click
+import pprint
 
 lexer = ox.make_lexer([
-    ('SPACE'  , r'\s+')
-    ('COMMENT', r';.*'),
-    ('NAME'   , r'[-a-zA-Z]+'),
-    ('NUMBER' , r'\d+'),
-    ('OPEN_P' , r'\('),
-    ('OPEN_F' , r'\)'),
-    ('NEWLINE', r'\n'),
-    ('DEF'    , 'def'),
-    ('DO'     , 'do'),
-    ('LOOP'   , 'loop'),
-    ('RIGHT'  , 'right'),
-    ('LEFT'   , 'left'),
-    ('INC'    , 'inc'),
-    ('DEC'    , 'dec'),
-    ('PRINT'  , 'print'),
-    ('READ'   , 'read'),
-    ('ADD'    , 'add'),
-    ('SUB'    , 'sub'),
+    ('OPEN_P', r'\('),
+	('CLOSE_P', r'\)'),
+	('OP', r'[-a-zA-Z]+'),
+	('NUMBER', r'[0-9]+'),
+	('ignore_COMMENT', r';[^\n]*'),
+	('ignore_NEWLINE', r'\s+'),
 ])
 
+tokens = ['OP', 'NUMBER', 'OPEN_P', 'CLOSE_P']
 
-tokens = ['SPACE', 'COMMENT', 'NAME', 'NUMBER', 'OPEN_P', 'OPEN_F', 'NEWLINE', 'DEF', 'DO', 'LOOP', 'RIGHT', 'LEFT', 'INC', 'DEC', 'PRINT', 'READ', 'ADD', 'SUB']
+atom = lambda x: x
+term = lambda x: (x,)
+comp = lambda x, y: (x,) + y
+pare = lambda x, y: '()'
+expr = lambda x, y, z: y
+parser = ox.make_parser([
+	('expr : OPEN_P term CLOSE_P', expr),
+    ('expr : OPEN_P CLOSE_P'     , pare),
+	('term : atom term'          , comp),
+	('term : atom'               , term),
+    ('atom : expr'               , atom),
+    ('atom : OP'                 , atom),
+    ('atom : NUMBER'             , atom),
+], tokens)
+
+@click.command()
+@click.argument('file', type=click.File('r'))
+
+def tree(file):
+	pprint.pprint(parser(lexer(file.read())))
+
+tree()
